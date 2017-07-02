@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class="row">
+	<div class="col-md-6 left-categories">
+		<div class="row sub-tittle"><div class="col-md-12"><h2>Categories</h2></div></div>
+		<div class="row">
+			<div class="col-md-12">
+				{% for i in catalogs %}
+					<p><a href="{{ url_for('items', item = i.name ) }}" class="categories">{{ i.name }}</a></p>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		{% block rightcontent %}
+		<div class="row"><div class="col-md-12"><a href="{{ url_for('add_item') }}" class="categories">Add Item</a></div></div>
+		<div class="row sub-tittle"><div class="col-md-12"><h2>Latest Items</h2></div></div>
+		<div class="row">
+			<div class="col-md-12">
+				{% for i in recent %}
+					<p>
+						<a href="{{url_for('sub_item', item=i.name, sub_item=i.sub_name)}}" class="categories">{{i.sub_name}}</a>
+						<span class="faded-sub-categories">({{i.name}})</span>
+					</p>
+				{% endfor %}
+			</div>
+		</div>
+		{% endblock %}
+	</div>
+</div>
+
+{% endblock %}

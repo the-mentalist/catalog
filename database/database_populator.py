@@ -46,31 +46,31 @@ session.add(Hockey)
 session.commit()
 
 # Sample Items
-Stick = Item(name='Stick', catalog_id=9, user_id=1)
+Stick = Item(name='Stick', catalog_id=9, user_id=1, description="sample text sample text sample text sample text sample text sample text sample text")
 session.add(Stick)
 
-Goggles = Item(name='Goggles', catalog_id=5, user_id=1)
+Goggles = Item(name='Goggles', catalog_id=5, user_id=1, description="sample text sample text sample text sample text sample text sample text sample text")
 session.add(Goggles)
 
-Snowboard = Item(name='Snowboard', catalog_id=5, user_id=1)
+Snowboard = Item(name='Snowboard', catalog_id=5, user_id=1, description="sample text sample text sample text sample text sample text sample text sample text")
 session.add(Snowboard)
 
-Twoshinguards = Item(name='Two Shinguards', catalog_id=1, user_id=1)
+Twoshinguards = Item(name='Two Shinguards', catalog_id=1, user_id=1, description="sample text sample text sample text sample text sample text sample text sample text")
 session.add(Twoshinguards)
 
-Shinguards = Item(name='Shinguards', catalog_id=1, user_id=1)
+Shinguards = Item(name='Shinguards', catalog_id=1, user_id=1, description="sample text sample text sample text sample text sample text sample text sample text")
 session.add(Shinguards)
 
-Frisbee2 = Item(name='Frisbee', catalog_id=4, user_id=1)
+Frisbee2 = Item(name='Frisbee', catalog_id=4, user_id=1, description="sample text sample text sample text sample text sample text sample text sample text")
 session.add(Frisbee2)
 
-Bat = Item(name='Bat', catalog_id=2, user_id=1)
+Bat = Item(name='Bat', catalog_id=2, user_id=1, description="sample text sample text sample text sample text sample text sample text sample text")
 session.add(Bat)
 
-Jersey = Item(name='Jersey', catalog_id=1, user_id=1)
+Jersey = Item(name='Jersey', catalog_id=1, user_id=1, description="sample text sample text sample text sample text sample text sample text sample text")
 session.add(Jersey)
 
-Soccercleats = Item(name='Soccer Cleats', catalog_id=1, user_id=1)
+Soccercleats = Item(name='Soccer Cleats', catalog_id=1, user_id=1, description="sample text sample text sample text sample text sample text sample text sample text")
 session.add(Soccercleats)
 
 session.commit()

@@ -1,0 +1,35 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class = "row">
+	<div class="col-md-6 sub-tittle"><h2>Edit Item</h2></div>
+</div>
+<form action="#" method = "post">
+	<div class = "form-group row">
+		<label class="col-2 col-form-label">Tittle</label>
+		<div class="col-10">
+			<input class="form-control" type="text" placeholder="{{item.name}}" name="name">
+		</div>
+	</div>
+	<div class = "form-group row">
+		<label class="col-2 col-form-label">Description</label>
+		<div class="col-10">
+			<textarea class="form-control" name="description" rows="2">{{item.description}}</textarea>
+		</div>
+	</div>
+	<div class = "form-group row">
+		<label class="col-2 col-form-label">Category</label>
+		<div class="col-6">
+			<select multiple class="form-control" name="category">
+				{% for i in catalogs %}
+					<option>{{i.name}}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+	<a href="{{url_for('edit_item', sub_item=item.name)}}">
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</a>
+</form>
+
+{% endblock %}

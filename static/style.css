@@ -1,0 +1,60 @@
+.top-banner {
+	width: 100%;
+	position: fixed;
+	background-color: dimgrey;
+	background-size: cover;
+}
+
+.tittle {
+	float: left;
+	margin-left: 10vw;
+	font-family: 'Anton', sans-serif;
+	color: white;
+}
+
+.sub-tittle {
+	font-family: 'Montserrat', sans-serif;
+}
+
+.faded-sub-categories {
+	color: dimgrey;
+	font-size: 15px;
+}
+
+#login-btn {
+	margin-top: 20px;
+	float: right;
+	font-family: "Montserrat", sans-serif;
+}
+
+.content {
+	margin-top: 18vh;
+	margin-left: auto;
+	margin-right: auto;
+	border: 2px solid #d1cfcf;
+	border-radius: 5px;
+	padding: 3vh 2vw;
+}
+
+.col-center {
+	float: none;
+	margin: auto;
+}
+
+.categories {
+	font-family: 'Titillium+Web', sans-serif;
+	color: #f0ad4e;
+	font-size: 20px;
+}
+
+.left-categories {
+	border-right: 1px solid #d1cfcf;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+a.tittle:hover {
+	color: white;
+}

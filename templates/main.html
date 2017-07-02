@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap Core CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+		<link href="https://fonts.googleapis.com/css?family=Anton|Montserrat|Titillium+Web" rel="stylesheet">
+
+		<link rel=stylesheet href="../../static/style.css">
+	</head>
+	<body>
+		
+		<div class="container" style="width: 100%;">
+
+			<div class="row top-banner">
+				<div class="col-md-6"><a href="{{url_for('item_catalog')}}" class="tittle"><h2>ITEM CATALOG</h2></a></div>
+				<div class="col-md-3"><button type="button" class="btn btn-warning" id="login-btn">Login</button></div>
+			</div>
+			<div class = "row">
+				<div class="col-md-8 col-center">
+					<div class="content">
+						{% block content %}
+						{% endblock %}
+					</div>
+				</div>
+					
+			</div>
+			
+		</div>
+	</body>
+</html>

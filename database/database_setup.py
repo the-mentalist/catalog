@@ -30,6 +30,7 @@ class Item(Base):
 	name = Column(String(100), nullable=False)
 	catalog_id = Column(Integer, ForeignKey('catalog.id'))
 	user_id = Column(Integer, ForeignKey('user.id'))
+	description = Column(String(250))
 	user = relationship(User)
 	catalog = relationship(Catalog)
 
