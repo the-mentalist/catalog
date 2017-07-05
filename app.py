@@ -34,15 +34,6 @@ app = Flask(__name__)
 
 @auth.verify_password
 def verify_password(email, password):
-    # Try to see if it's a token first
-    # user_id = User.verify_auth_token(username_or_token)
-    # if user_id:
-    # 	user = session.query(User).filter_by(id = user_id).one()
-    # else:
-    # 	user =
-    # session.query(User).filter_by(username = username_or_token).first()
-    # 	if not user or not user.verify_password(password):
-    # 		return False
     user = session.query(User).filter_by(email=email).first()
     if not user or not user.verify_password(password):
         return False
@@ -162,6 +153,8 @@ def login():
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
+# Route to connect with manual email
+
 
 @app.route('/connect', methods=['POST'])
 def connect():
@@ -173,6 +166,8 @@ def connect():
     login_session['email'] = email
     flash('Successfully Loged In as %s' % email)
     return redirect(url_for('item_catalog'))
+
+# Route to connect via gplus id
 
 
 @app.route('/gconnect', methods=['POST'])
