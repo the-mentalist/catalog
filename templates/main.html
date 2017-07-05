@@ -5,7 +5,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- Bootstrap Core CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
+		<!-- Jquery -->
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<!-- Google API -->
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<!-- Fonts -->
 		<link href="https://fonts.googleapis.com/css?family=Anton|Montserrat|Titillium+Web" rel="stylesheet">
 
 		<link rel=stylesheet href="../../static/style.css">
@@ -16,7 +20,15 @@
 
 			<div class="row top-banner">
 				<div class="col-md-6"><a href="{{url_for('item_catalog')}}" class="tittle"><h2>ITEM CATALOG</h2></a></div>
-				<div class="col-md-3"><button type="button" class="btn btn-warning" id="login-btn">Login</button></div>
+				<div class="col-md-3">
+					{% if email %}
+					<a type="button" href="{{url_for('logout')}}" class="btn btn-warning btn-align" id="logout-btn">
+						Logout</a>
+					{% endif %}
+					{% if not email %}
+					<a type="button" href="{{url_for('login')}}" class="btn btn-warning btn-align" id="login-btn">Login</a>
+					{% endif %}
+				</div>
 			</div>
 			<div class = "row">
 				<div class="col-md-8 col-center">

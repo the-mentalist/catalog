@@ -11,9 +11,11 @@
 </div>
 <div class="row">
 	<div class="col-md-12">
+		{% if email %}
 		<span><a href="{{url_for('edit_item', sub_item = sub_item.name )}}">Edit</a></span>
 		<span>|</span>
 		<span><a href="{{url_for('delete_item', sub_item = sub_item.name )}}">Delete</a></span>
+		{% endif %}
 	</div>
 </div>
 

@@ -1,0 +1,75 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class = "row">
+	<div class="col-md-6 sub-tittle"><h2>Login Using</h2></div>
+</div>
+
+<div class = "row">
+	<div class="col-md-3 left-categories">
+		<!-- google login -->
+		<div class="g-signin"
+		data-scope="openid email"
+		data-clientid="841621908787-lrnsrsmrbgc76pr7e6t526cd3lqrf16b.apps.googleusercontent.com"
+		data-redirecturi="postmessage"
+		data-accesstype="offline"
+		data-cookiepolicy="single_host_origin"
+		data-callback="onSignIn"
+		data-approvalprompt="force">
+		</div>
+	</div>
+	<div class="col-md-6" style="margin-left: 10%;">
+		<!-- Normal Login -->
+		<form action="connect" method = "post" class="form-horizontal">
+			<div class = "form-group row">
+				<label class="col-md-2 control-label">Email</label>
+				<div class="col-md-10">
+					<input class="form-control" type="text" placeholder="email" name="email">
+				</div>
+			</div>
+			<div class = "form-group row">
+				<label class="col-md-2 control-label">Password</label>
+				<div class="col-md-10">
+					<input class="form-control" type="password" placeholder="password" name="pass">
+				</div>
+			</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12"><div id="result"></div></div>
+</div>
+
+<script type="text/javascript">
+	function onSignIn(authResult) {
+		$('#login-btn').attr('style', 'display: none');
+		$('#logout-btn').attr('style', 'display: block');
+		// var id_token = googleUser.getAuthResponse().id_token;
+		$.ajax({
+			type: 'POST',
+			url: '/gconnect?state={{STATE}}',
+			processData: false,
+			data: authResult['code'],
+			contentType: 'application/octet-stream; charset=utf-8',
+			success: function(result){
+				// Handle or verify the server response if necessary
+				if(result){
+					$('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+					setTimeout(function() {
+						window.location.href = "/catalog";
+					}, 4000);
+				}
+			},
+			error: function(){
+				$('#result').html('Login Failed')
+			}
+
+		});
+  		//var profile = googleUser.getBasicProfile();
+		//console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+	};
+
+</script>
+
+{% endblock %}

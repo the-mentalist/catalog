@@ -21,7 +21,7 @@
 	font-size: 15px;
 }
 
-#login-btn {
+.btn-align {
 	margin-top: 20px;
 	float: right;
 	font-family: "Montserrat", sans-serif;
