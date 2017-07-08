@@ -21,11 +21,11 @@
 			<div class="row top-banner">
 				<div class="col-md-6"><a href="{{url_for('item_catalog')}}" class="tittle"><h2>ITEM CATALOG</h2></a></div>
 				<div class="col-md-3">
-					{% if email %}
+					{% if logged %}
 					<a type="button" href="{{url_for('logout')}}" class="btn btn-warning btn-align" id="logout-btn">
 						Logout</a>
 					{% endif %}
-					{% if not email %}
+					{% if not logged %}
 					<a type="button" href="{{url_for('login')}}" class="btn btn-warning btn-align" id="login-btn">Login</a>
 					{% endif %}
 				</div>

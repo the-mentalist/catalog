@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, g, flash
+from flask import Flask, render_template, request, redirect, flash
 from flask import session as login_session, make_response, url_for, jsonify
 
 import json
@@ -15,9 +15,6 @@ from database.database_setup import User, Catalog, Item, engine, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from flask_httpauth import HTTPBasicAuth
-auth = HTTPBasicAuth()
-
 Base.metadata.bind = engine
 
 # A DBSession() instance establishes all conversations with the database
@@ -32,15 +29,6 @@ CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())[
 app = Flask(__name__)
 
 
-@auth.verify_password
-def verify_password(email, password):
-    user = session.query(User).filter_by(email=email).first()
-    if not user or not user.verify_password(password):
-        return False
-    g.user = user
-    return True
-
-
 # Route for home URI
 @app.route('/')
 @app.route('/catalog')
@@ -49,7 +37,7 @@ def item_catalog():
     recent = session.query(Catalog.name.label('name'), Item.name.label(
         'sub_name')).join(Item).order_by(Item.id.desc()).limit(7)
     return render_template('home.html', catalogs=catalogs,
-                           recent=recent, email=login_session.get('email'))
+                           recent=recent, logged=login_session.get('logged'))
 
 # Route to display items for catalog selected
 
@@ -62,17 +50,21 @@ def items(item):
     print values
     return render_template('specificitem.html', catalogs=catalogs,
                            category=item, items=values,
-                           email=login_session.get('email'))
+                           logged=login_session.get('logged'))
 
 # Route to add item for catalog selected
 
+# login_session.get('email') checks for authentication
+
 
 @app.route('/catalog/new', methods=['GET', 'POST'])
-@auth.login_required
 def add_item():
-    if request.method == 'POST':
+    if request.method == 'POST' and login_session.get('email'):
+        user_id = session.query(User.id).filter(
+            User.email == login_session.get('email')).first()[0]
         newitem = Item(name=request.form.get('name'),
-                       description=request.form.get('description'))
+                       description=request.form.get('description'),
+                       user_id=user_id)
         # check if user has entered category or not
         if not request.form.get('category'):
             # if not, select 1 as default
@@ -90,7 +82,7 @@ def add_item():
     else:
         catalogs = session.query(Catalog).all()
         return render_template('newitem.html', catalogs=catalogs,
-                               email=login_session.get('email'))
+                               logged=login_session.get('logged'))
 
 # Route to display item description
 
@@ -100,16 +92,15 @@ def sub_item(item, sub_item):
     item = session.query(Item.name, Item.description).join(Catalog).filter(
         Catalog.name == item, Item.name == sub_item).first()
     return render_template('showsubitem.html', sub_item=item,
-                           email=login_session.get('email'))
+                           logged=login_session.get('logged'))
 
 # Route to edit items for catalog selected
 
 
 @app.route('/catalog/<sub_item>/edit', methods=['GET', 'POST'])
-@auth.login_required
 def edit_item(sub_item):
     eitem = session.query(Item).filter(Item.name == sub_item).first()
-    if request.method == 'POST':
+    if request.method == 'POST' and login_session.get('email'):
         if request.form.get('name'):
             eitem.name = request.form.get('name')
         if request.form.get('description'):
@@ -125,15 +116,14 @@ def edit_item(sub_item):
     else:
         catalogs = session.query(Catalog).all()
         return render_template('edititem.html', catalogs=catalogs,
-                               item=eitem, email=login_session.get('email'))
+                               item=eitem, logged=login_session.get('logged'))
 
 # Route to delete items for catalog selected
 
 
 @app.route('/catalog/<sub_item>/delete', methods=['GET', 'POST'])
-@auth.login_required
 def delete_item(sub_item):
-    if request.method == 'POST':
+    if request.method == 'POST' and login_session.get('email'):
         ditem = session.query(Item).filter(Item.name == sub_item).first()
         session.delete(ditem)
         session.commit()
@@ -141,7 +131,7 @@ def delete_item(sub_item):
         return redirect(url_for('item_catalog'))
     else:
         return render_template('deleteitem.html', item=sub_item,
-                               email=login_session.get('email'))
+                               logged=login_session.get('logged'))
 
 # Route for login
 
@@ -163,9 +153,15 @@ def connect():
     user = session.query(User).filter_by(email=email).first()
     if not user or not user.verify_password(password):
         return redirect(url_for('login'))
+    login_session['logged'] = True
     login_session['email'] = email
     flash('Successfully Loged In as %s' % email)
     return redirect(url_for('item_catalog'))
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    # send auth email
+    # return redirect('http://'+email+':'+password+'@'+'localhost:5000/catalog')
+    # return requests.Response(headers={'Authorization':
+    # email+':'+password},is_redirect=True,url='/catalog')
 
 # Route to connect via gplus id
 
@@ -235,6 +231,7 @@ def gconnect():
     answer = requests.get(userinfo_url, params=params)
     data = answer.json()
 
+    login_session['logged'] = True
     login_session['email'] = data['email']
 
     # see if user exists, if it doesn't make a new one
@@ -252,8 +249,8 @@ def gconnect():
 # Route to display items for catalog selected
 @app.route('/logout')
 def logout():
-    email = login_session.get('email')
-    if email is None:
+    logged = login_session.get('logged')
+    if logged is None:
         response = make_response(json.dumps(
             'Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -267,7 +264,6 @@ def logout():
         result = h.request(url, 'GET')[0]
         if result['status'] == '200':
             del login_session['access_token']
-            del login_session['email']
             del login_session['credentials']
             del login_session['gplus_id']
         else:
@@ -276,7 +272,7 @@ def logout():
             response.headers['Content-Type'] = 'application/json'
             return response
     else:
-        del login_session['email']
+        del login_session['logged']
     return redirect(url_for('item_catalog'))
 
 
@@ -308,3 +304,6 @@ if __name__ == '__main__':
 
 
 # pep 8 code style
+# add json endpoint for items
+# authorization during edit/delete
+# try using cookies and session

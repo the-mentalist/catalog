@@ -28,7 +28,7 @@
 	</div>
 	<div class="col-md-6">
 		{% block rightcontent %}
-		{% if email %}
+		{% if logged %}
 			<div class="row"><div class="col-md-12"><a href="{{ url_for('add_item') }}" class="categories">Add Item</a></div></div>
 		{% endif %}
 		<div class="row sub-tittle"><div class="col-md-12"><h2>Latest Items</h2></div></div>
