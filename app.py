@@ -312,7 +312,6 @@ def get_items_category(catalog_id):
 
 @app.route('/catalog.json')
 def item_catalog_json():
-    # have to create a join
     catalogs = session.query(Catalog).all()
     catalog_json = []
     for catalog in catalogs:
@@ -323,6 +322,12 @@ def item_catalog_json():
         catalog_json.append(cat_sub_json)
     return jsonify(Category=catalog_json)
 
+@app.route('/catalog/<item>/<sub_item>.json')
+def sub_item_json(item,sub_item):
+    result = session.query(Item).join(Catalog).filter(
+        Catalog.name == item, Item.name == sub_item).first()
+    return jsonify(result.serialize)
+
 
 if __name__ == '__main__':
     super_secret_key = ''.join(random.choice(
@@ -331,6 +336,3 @@ if __name__ == '__main__':
     app.debug = True
     app.run('0.0.0.0', port=5000)
 
-
-# pep 8 code style
-# add json endpoint for items
