@@ -7,7 +7,7 @@ Storage:
 For storing items and catalogs sqlite database is used
 
 Operation available:
-Note: User needs to be logged in
+Note: User needs to be logged in, also the user who created the item is allowed to edit/delete
 New Item: /catalog/new
 Edit Item: /catalog/<itemname>/edit
 Delete Item: /catalog/<itemname>/delete
