@@ -48,7 +48,6 @@ def items(item):
     catalogs = session.query(Catalog).all()
     values = session.query(Item.name).join(
         Catalog).filter(Catalog.name == item).all()
-    print values
     return render_template('specificitem.html', catalogs=catalogs,
                            category=item, items=values,
                            logged=login_session.get('logged'))
@@ -113,6 +112,13 @@ def edit_item(sub_item):
     eitem = session.query(Item).filter(Item.name == sub_item).first()
     if login_session.get('logged'):
         if request.method == 'POST':
+            email = session.query(Item.name, User.email).join(User).filter(Item.name == sub_item).first()[1]
+            email_hash = request.cookies.get('email')
+            can_edit = pwd_context.verify(email, email_hash)
+            if not can_edit:
+                resp = make_response(json.dumps('Authorization Error'), 501)
+                resp.headers['Content-Type'] = 'application/json'
+                return resp
             if request.form.get('name'):
                 eitem.name = request.form.get('name')
             if request.form.get('description'):
@@ -143,6 +149,13 @@ def edit_item(sub_item):
 def delete_item(sub_item):
     if login_session.get('logged'):
         if request.method == 'POST':
+            email = session.query(Item.name, User.email).join(User).filter(Item.name == sub_item).first()[1]
+            email_hash = request.cookies.get('email')
+            can_edit = pwd_context.verify(email, email_hash)
+            if not can_edit:
+                resp = make_response(json.dumps('Authorization Error'), 501)
+                resp.headers['Content-Type'] = 'application/json'
+                return resp
             ditem = session.query(Item).filter(Item.name == sub_item).first()
             session.delete(ditem)
             session.commit()
