@@ -8,10 +8,11 @@ Base = declarative_base()
 
 
 class User(Base):
-    __tablename__ = 'user'
+    __tablename__ = 'user_info'
+
     id = Column(Integer, primary_key=True)
     email = Column(String(150), nullable=False)
-    password_hash = Column(String(64))
+    password_hash = Column(String(250))
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
@@ -33,9 +34,9 @@ class Item(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
     catalog_id = Column(Integer, ForeignKey('catalog.id'))
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey('user_info.id'))
     description = Column(String(250))
-    user = relationship(User, cascade='delete')
+    user_info = relationship(User, cascade='delete')
     catalog = relationship(Catalog, cascade='delete')
 
     @property
@@ -47,6 +48,6 @@ class Item(Base):
             'cat_id': self.catalog_id
         }
 
-engine = create_engine('sqlite:///itemcatalog.db')
+engine = create_engine('postgresql://postgres:123654@localhost/catalog')
 
 Base.metadata.create_all(engine)

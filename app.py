@@ -23,7 +23,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # client id for google api
-CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())[
+CLIENT_ID = json.loads(open('/var/www/catalog/client_secrets.json', 'r').read())[
     'web']['client_id']
 
 # Initialize flask app
@@ -212,7 +212,7 @@ def gconnect():
     id_token = request.data
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets('/var/www/catalog/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(id_token)
     except FlowExchangeError:
@@ -342,10 +342,10 @@ def sub_item_json(item,sub_item):
     return jsonify(result.serialize)
 
 
-if __name__ == '__main__':
-    super_secret_key = ''.join(random.choice(
-        string.ascii_uppercase + string.digits) for x in xrange(32))
-    app.secret_key = super_secret_key
-    app.debug = True
-    app.run('0.0.0.0', port=5000)
+#if __name__ == '__main__':
+#    super_secret_key = ''.join(random.choice(
+#        string.ascii_uppercase + string.digits) for x in xrange(32))
+#    app.secret_key = super_secret_key
+#    app.debug = True
+#    app.run('0.0.0.0', port=5000)
 
